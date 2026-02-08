@@ -18,7 +18,7 @@ public class InvoiceDto {
     public InvoiceData generate(InvoiceForm form) {
         validate(form);
 
-        String base64Pdf = invoiceService.generateAndSaveInvoice(form);
+        String base64Pdf = invoiceService.generateOrGetInvoice(form);
 
         InvoiceData data = new InvoiceData();
         data.setOrderId(form.getOrderId());

@@ -15,26 +15,31 @@ import java.util.List;
 
 @Service
 public class InvoiceService {
-    private static final String INVOICE_DIR = "/tmp/invoices/";
+    private static final String INVOICE_DIR = "/invoices/";
 
     @Autowired
     private PdfGenerator pdfGenerator;
 
-    public String generateAndSaveInvoice(InvoiceForm form) {
+    public String generateOrGetInvoice(InvoiceForm form) {
         Long orderId = form.getOrderId();
-        List<InvoiceItem> items = form.getItems();
+        Path invoicePath = Paths.get(INVOICE_DIR, "INV-" + orderId + ".pdf");
 
         try {
-            byte[] pdfBytes = pdfGenerator.generate(orderId, items);
-            Files.createDirectories(Paths.get(INVOICE_DIR));
-            Path path = Paths.get(
-                    INVOICE_DIR + "INV-" + orderId + ".pdf"
-            );
-            Files.write(path, pdfBytes);
+            Files.createDirectories(invoicePath.getParent());
+
+            byte[] pdfBytes;
+
+            if (Files.exists(invoicePath)) {
+                pdfBytes = Files.readAllBytes(invoicePath);
+            } else {
+                pdfBytes = pdfGenerator.generate(orderId, form.getItems());
+                Files.write(invoicePath, pdfBytes);
+            }
 
             return Base64.getEncoder().encodeToString(pdfBytes);
+
         } catch (Exception e) {
-            throw new ApiException("Invoice generation failed", e);
+            throw new ApiException("Invoice processing failed: ", e);
         }
     }
 }
