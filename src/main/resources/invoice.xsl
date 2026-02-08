@@ -8,7 +8,6 @@
 
         <fo:root>
 
-            <!-- Page layout -->
             <fo:layout-master-set>
                 <fo:simple-page-master
                         master-name="A4"
@@ -22,102 +21,129 @@
             <fo:page-sequence master-reference="A4">
                 <fo:flow flow-name="xsl-region-body">
 
-                    <!-- INVOICE TITLE -->
-                    <fo:block
-                            font-size="18pt"
-                            font-weight="bold"
-                            text-align="center"
-                            margin-bottom="15pt">
-                        INVOICE
+                    <!-- COLORED HEADER -->
+                    <fo:block background-color="#2c3e50"
+                              color="white"
+                              padding="12pt"
+                              margin-bottom="15pt">
+
+                        <fo:table width="100%">
+                            <fo:table-body>
+                                <fo:table-row>
+
+                                    <!-- COMPANY DETAILS -->
+                                    <fo:table-cell>
+                                        <fo:block font-size="14pt" font-weight="bold">
+                                            <xsl:value-of select="invoice/company/name"/>
+                                        </fo:block>
+                                        <fo:block font-size="9pt">
+                                            <xsl:value-of select="invoice/company/address"/>
+                                        </fo:block>
+                                        <fo:block font-size="9pt">
+                                            Phone: <xsl:value-of select="invoice/company/phone"/>
+                                        </fo:block>
+                                        <fo:block font-size="9pt">
+                                            Email: <xsl:value-of select="invoice/company/email"/>
+                                        </fo:block>
+                                    </fo:table-cell>
+
+                                    <!-- INVOICE META -->
+                                    <fo:table-cell text-align="right">
+                                        <fo:block font-size="24pt" font-weight="bold">
+                                            INVOICE
+                                        </fo:block>
+                                        <fo:block font-size="9pt">
+                                            Invoice #: <xsl:value-of select="invoice/invoiceNumber"/>
+                                        </fo:block>
+                                        <fo:block font-size="9pt">
+                                            Order ID: <xsl:value-of select="invoice/orderId"/>
+                                        </fo:block>
+                                        <fo:block font-size="9pt">
+                                            Date: <xsl:value-of select="invoice/date"/>
+                                        </fo:block>
+                                    </fo:table-cell>
+
+                                </fo:table-row>
+                            </fo:table-body>
+                        </fo:table>
                     </fo:block>
 
-                    <!-- ORDER INFO -->
-                    <fo:block font-size="10pt">
-                        Order ID:
-                        <xsl:value-of select="invoice/orderId"/>
-                    </fo:block>
-
-                    <fo:block font-size="10pt" margin-bottom="15pt">
-                        Date:
-                        <xsl:value-of select="invoice/date"/>
+                    <!-- BILLED TO -->
+                    <fo:block margin-bottom="15pt">
+                        <fo:block font-weight="bold" font-size="11pt">
+                            Billed To
+                        </fo:block>
+                        <fo:block font-size="10pt">
+                            <xsl:value-of select="invoice/billedTo/name"/>
+                        </fo:block>
+                        <fo:block font-size="10pt">
+                            <xsl:value-of select="invoice/billedTo/address"/>
+                        </fo:block>
+                        <fo:block font-size="10pt">
+                            Phone: <xsl:value-of select="invoice/billedTo/phone"/>
+                        </fo:block>
+                        <fo:block font-size="10pt">
+                            Email: <xsl:value-of select="invoice/billedTo/email"/>
+                        </fo:block>
                     </fo:block>
 
                     <!-- ITEMS TABLE -->
                     <fo:table width="100%"
-                              border="1pt solid black"
+                              border="1pt solid #444"
                               border-collapse="collapse">
 
-                        <!-- Table Header -->
                         <fo:table-header>
-                            <fo:table-row background-color="#eeeeee">
+                            <fo:table-row background-color="#ecf0f1">
 
-                                <fo:table-cell padding="6pt" border="1pt solid black">
+                                <fo:table-cell padding="6pt" border="1pt solid #444">
                                     <fo:block font-weight="bold">Item</fo:block>
                                 </fo:table-cell>
 
-                                <fo:table-cell padding="6pt" border="1pt solid black"
-                                               text-align="center">
+                                <fo:table-cell padding="6pt" border="1pt solid #444" text-align="center">
                                     <fo:block font-weight="bold">Qty</fo:block>
                                 </fo:table-cell>
 
-                                <fo:table-cell padding="6pt" border="1pt solid black"
-                                               text-align="right">
+                                <fo:table-cell padding="6pt" border="1pt solid #444" text-align="right">
                                     <fo:block font-weight="bold">Price</fo:block>
                                 </fo:table-cell>
 
-                                <fo:table-cell padding="6pt" border="1pt solid black"
-                                               text-align="right">
+                                <fo:table-cell padding="6pt" border="1pt solid #444" text-align="right">
                                     <fo:block font-weight="bold">Total</fo:block>
                                 </fo:table-cell>
 
                             </fo:table-row>
                         </fo:table-header>
 
-                        <!-- Table Body -->
                         <fo:table-body>
                             <xsl:for-each select="invoice/items/item">
-
                                 <fo:table-row>
 
-                                    <fo:table-cell padding="6pt" border="1pt solid black">
-                                        <fo:block>
-                                            <xsl:value-of select="name"/>
-                                        </fo:block>
+                                    <fo:table-cell padding="6pt" border="1pt solid #444">
+                                        <fo:block><xsl:value-of select="name"/></fo:block>
                                     </fo:table-cell>
 
-                                    <fo:table-cell padding="6pt" border="1pt solid black"
-                                                   text-align="center">
-                                        <fo:block>
-                                            <xsl:value-of select="quantity"/>
-                                        </fo:block>
+                                    <fo:table-cell padding="6pt" border="1pt solid #444" text-align="center">
+                                        <fo:block><xsl:value-of select="quantity"/></fo:block>
                                     </fo:table-cell>
 
-                                    <fo:table-cell padding="6pt" border="1pt solid black"
-                                                   text-align="right">
-                                        <fo:block>
-                                            Rs. <xsl:value-of select="price"/>
-                                        </fo:block>
+                                    <fo:table-cell padding="6pt" border="1pt solid #444" text-align="right">
+                                        <fo:block>Rs. <xsl:value-of select="price"/></fo:block>
                                     </fo:table-cell>
 
-                                    <fo:table-cell padding="6pt" border="1pt solid black"
-                                                   text-align="right">
-                                        <fo:block>
-                                            Rs. <xsl:value-of select="total"/>
-                                        </fo:block>
+                                    <fo:table-cell padding="6pt" border="1pt solid #444" text-align="right">
+                                        <fo:block>Rs. <xsl:value-of select="total"/></fo:block>
                                     </fo:table-cell>
 
                                 </fo:table-row>
-
                             </xsl:for-each>
                         </fo:table-body>
                     </fo:table>
 
                     <!-- GRAND TOTAL -->
-                    <fo:block
-                            text-align="right"
-                            font-size="11pt"
-                            font-weight="bold"
-                            margin-top="12pt">
+                    <fo:block text-align="right"
+                              font-size="12pt"
+                              font-weight="bold"
+                              margin-top="12pt">
                         Grand Total: Rs. <xsl:value-of select="invoice/grandTotal"/>
                     </fo:block>
 

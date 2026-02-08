@@ -1,11 +1,15 @@
 package com.increff.invoice.formdata;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class InvoiceForm {
     private Long orderId;
     private List<InvoiceItem> items;

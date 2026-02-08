@@ -70,6 +70,8 @@ public class PdfGenerator {
 
     private String buildXml(Long orderId, List<InvoiceItem> items) {
         double grandTotal = 0.0;
+        String invoiceNumber = "INV-" + orderId;
+
         StringBuilder itemsXml = new StringBuilder();
 
         for (InvoiceItem item : items) {
@@ -98,21 +100,40 @@ public class PdfGenerator {
         return """
             <?xml version="1.0" encoding="UTF-8"?>
             <invoice>
+            
+                <invoiceNumber>%s</invoiceNumber>
                 <orderId>%d</orderId>
                 <date>%s</date>
-
+            
+                <company>
+                    <name>Increff Pvt Ltd</name>
+                    <address>Bangalore, India</address>
+                    <phone>+91 99999 99999</phone>
+                    <email>support@increff.com</email>
+                </company>
+            
+                <billedTo>
+                    <name>John Doe</name>
+                    <address>Bangalore</address>
+                    <phone>+91 88888 88888</phone>
+                    <email>john@example.com</email>
+                </billedTo>
+            
                 <items>
                     %s
                 </items>
-
+            
                 <grandTotal>%.2f</grandTotal>
+            
             </invoice>
             """.formatted(
+                invoiceNumber,
                 orderId,
                 LocalDate.now(),
                 itemsXml,
                 grandTotal
         );
+
     }
 
     private String escapeXml(String value) {

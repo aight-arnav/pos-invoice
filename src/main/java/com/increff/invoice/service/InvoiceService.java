@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 public class InvoiceService {
-    private static final String INVOICE_DIR = "/invoices/";
+    private static final String INVOICE_DIR = "invoices";
 
     @Autowired
     private PdfGenerator pdfGenerator;
