@@ -4,6 +4,25 @@
         xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
         xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
+    <xsl:template name="soft-wrap">
+        <xsl:param name="text"/>
+        <xsl:param name="limit" select="15"/>
+
+        <xsl:choose>
+            <xsl:when test="string-length($text) &lt;= $limit">
+                <xsl:value-of select="$text"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="substring($text, 1, $limit)"/>
+                <xsl:text>&#8203;</xsl:text>
+                <xsl:call-template name="soft-wrap">
+                    <xsl:with-param name="text" select="substring($text, $limit + 1)"/>
+                    <xsl:with-param name="limit" select="$limit"/>
+                </xsl:call-template>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
     <xsl:template match="/">
 
         <fo:root>
@@ -89,8 +108,14 @@
 
                     <!-- ITEMS TABLE -->
                     <fo:table width="100%"
+                              table-layout="fixed"
                               border="1pt solid #444"
                               border-collapse="collapse">
+
+                        <fo:table-column column-width="45%"/>
+                        <fo:table-column column-width="15%"/>
+                        <fo:table-column column-width="20%"/>
+                        <fo:table-column column-width="20%"/>
 
                         <fo:table-header>
                             <fo:table-row background-color="#ecf0f1">
@@ -118,8 +143,13 @@
                             <xsl:for-each select="invoice/items/item">
                                 <fo:table-row>
 
+                                    <!-- ONLY MODIFIED CELL -->
                                     <fo:table-cell padding="6pt" border="1pt solid #444">
-                                        <fo:block><xsl:value-of select="name"/></fo:block>
+                                        <fo:block>
+                                            <xsl:call-template name="soft-wrap">
+                                                <xsl:with-param name="text" select="name"/>
+                                            </xsl:call-template>
+                                        </fo:block>
                                     </fo:table-cell>
 
                                     <fo:table-cell padding="6pt" border="1pt solid #444" text-align="center">
